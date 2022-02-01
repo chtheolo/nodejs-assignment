@@ -1,0 +1,9 @@
+#!/bin/bash
+
+clear
+
+echo "Cleaning up docker containers"
+sudo docker rm -f nats
+echo "Starting nats" && \
+sudo docker run -d --name nats -p 4222:4222 nats && \
+echo "nats started!"
