@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  # api:
+  #   container_name: api_mongo
+  #   restart: always
+  #   build: 
+  #     context: ./api
+  #   ports: 
+  #     - "3000:3000"
+  #   links: 
+  #     - mongo
+  #   depends_on:
+  #     - mongo
+  data_broadcast:
+    container_name: data_bcast
+    build:
+      context: ./vehicle-data-generator
+    # depends_on:
+    #   - data_parser
+  #     - nats
+  # data_parser:
+  #   container_name: parser
+  #   build: 
+  #     context: ./vehicle-data-parser
+  #   depends_on:
+  #     # - api
+  #     - nats
+  # mongo:
+  #   container_name: mongo_dev
+  #   restart: always
+  #   image: mongo
+  #   ports: 
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./mongo_data:/var/lib/mongo/data
+  nats:
+    image: nats
+    expose:
+      - "4222"
+    ports:
+      - "8222:8222"
+    hostname: nats-server
