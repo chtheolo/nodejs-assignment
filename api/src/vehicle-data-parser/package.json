@@ -1,0 +1,15 @@
+{
+  "name": "vehicle-data-parser",
+  "version": "1.0.0",
+  "description": "A subscribe service to Nats server, listening and forwarding messages to a REST API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-parser": "node index.js"
+  },
+  "author": "chtheolo",
+  "license": "ISC",
+  "dependencies": {
+    "nats": "^2.5.0"
+  }
+}
