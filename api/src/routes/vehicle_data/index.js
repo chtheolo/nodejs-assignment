@@ -1,11 +1,48 @@
 const VehicleData = require('./model');
 const config = require('../../../config');
 
+function get(req, res) {
+	let query;
+
+	if (res.query.vehicleId) {
+		query = VehicleData.find({vehicleId: {$eq: req.query.vehicleId}});
+	}
+
+	if (res.query.startRouteDate) {
+		query = VehicleData.find({startRouteDate: {$eq: req.query.startRouteDate}});
+	}
+
+	if (req.query.startRouteDate && req.query.vehicleId) {
+		query = VehicleData.find({
+			$and: {
+				startRouteDate: {$eq: req.query.startRouteDate},
+			},
+		});
+	}
+
+	// I if (req.query.date && req.query.vehicleId) {
+	// 	query = VehicleData.find({
+	// 		$and: {
+	// 			createdAt: {}
+	// 		}
+	// 	});
+	// }
+
+	query
+		.exec((error, data) => {
+			if (error) {
+				return res.status(422).send(error);
+			}
+
+			return res.status(200).send(data);
+		});
+}
+
 // A function that retrieves obj from the nats server and
 // save them in mongo.
 async function post(data, vehicleName) {
 	return new Promise((resolve, reject) => {
-		if (data) {
+		if (!data) {
 			reject(new Error('undefined data arguments'));
 		}
 
@@ -37,7 +74,7 @@ async function post(data, vehicleName) {
 async function update(data) {
 	const filter = {
 		vehicleId: {$eq: config.subject.name},
-		startRouteDate: {$eq: new Date(config.routes.r1.start)},
+		startRouteDate: {$eq: new Date(config.routes.r1.startTime)},
 	};
 
 	const updateDoc = {
@@ -56,11 +93,11 @@ async function update(data) {
 	};
 
 	try {
-		const res = await VehicleData.findOneAndUpdate(filter, updateDoc);
-		return res;
+		await VehicleData.findOneAndUpdate(filter, updateDoc);
+		return 'Sucessfully updated!';
 	} catch (error) {
 		return error;
 	}
 }
 
-module.exports = {post, update};
+module.exports = {get, post, update};

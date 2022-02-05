@@ -7,8 +7,8 @@ const schemaOpts = {
 
 const VehicleDataSchema = new Schema({
 	vehicleId: {type: String},
-	startRouteDate: {type: Date, default: new Date().now()},
-	endRouteDate: {type: Date, default: new Date().now()},
+	startRouteDate: {type: Date, default: new Date()},
+	// D date: {type: Date, default: new Date()},
 	measurements: [
 		{type: Object},
 	],

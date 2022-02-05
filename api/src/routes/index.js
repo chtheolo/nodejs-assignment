@@ -17,7 +17,7 @@ module.exports = function (app) {
 	/*		Vehicle Data        */
 	routes.api.use('/vehicle_data', routes.vehicleData);
 	routes.vehicleData
-		.post('/', controllers.vehicle_data.post);
+		.get('/', controllers.vehicleData.get);
 
 	// Set url for API group routes
 	app.use('/', routes.api);
