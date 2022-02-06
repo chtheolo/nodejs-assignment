@@ -6,11 +6,12 @@ const app = express();
 const router = require('./routes');
 const config = require('../config');
 const natsParser = require('./vehicle-data-parser');
+const {logger} = require('./logs');
 
-const main = async () => {
+async function main() {
 	/** If there is not define a PORT variable in .env file, then stop the service. */
 	if (!config.service.port) {
-		console.log('No PORT variable!');
+		logger.debug('No PORT variable');
 		process.exit(-1);
 	}
 
@@ -24,6 +25,7 @@ const main = async () => {
 	app.use(bodyParser.json());
 
 	const server = app.listen(config.service.port);
+	logger.info(`Server :: Running @ 'http://localhost:${config.service.port}.`);
 	console.log(`Server :: Running @ 'http://localhost:${config.service.port}.`);
 
 	// Import routes to be served
@@ -33,11 +35,11 @@ const main = async () => {
 	try {
 		natsParser.subscribe();
 	} catch (error) {
-		console.error(error.message);
+		logger.error(error.message);
 	}
 
 	return server;
-};
+}
 
 const server = main();
 

@@ -1,5 +1,7 @@
+/* eslint-disable arrow-body-style */
 const config = require('../../config');
 const {connect} = require('nats');
+const {logger} = require('../logs');
 const {post, update} = require('../routes/vehicle_data');
 
 function arraysEqual(gps, point) {
@@ -28,32 +30,30 @@ async function subscribe() {
 	let nc;
 	try {
 		nc = await connect(
-			// {json: true},
-			{servers: 'nats://nats-server:4222'},
+			{servers: 'nats://nats:4222'},
 		);
 	} catch (error) {
-		console.log(error);
 		return new Error(`error connecting to nats: ${error.message}`);
 	}
 
-	console.info(
+	logger.info(
 		`connected to ${nc.options.servers}`,
 	);
 
 	nc.closed()
 		.then(error => {
-			console.log('connection has been closed');
 			if (error) {
-				return new Error(error.message);
+				return new Error(`connection has been closed: ${error.message}`);
 			}
 		})
 		.catch(error => {
-			console.error(error.message);
-			return new Error(error.message);
+			return new Error(`Closed connection error: ${error.message}`);
 		});
 
 	const sub = nc.subscribe(`vehicle.${config.subject.name}`);
 	console.log(`subscribed to ${config.subject.name} using subscription id ${sub.getID()}`);
+	logger.info(`subscribed to ${config.subject.name} using subscription id ${sub.getID()}`);
+
 	for await (const m of sub) {
 		try {
 			const d = await transformToObj(m.data);
@@ -63,30 +63,24 @@ async function subscribe() {
 				config.routes.r1.startTime = d.time;
 				try {
 					const res = await post(d, config.subject.name);
-					console.log(res);
+					logger.info(res);
 				} catch (error) {
-					console.error(error.message);
+					logger.error(error.message);
 				}
 			} else {
 				try {
 					const res = await update(d);
-					console.log(res);
+					logger.info(res);
 				} catch (error) {
-					console.error(error.message);
+					logger.error(error.message);
 				}
 			}
 		} catch (error) {
-			console.log(error.message);
+			logger.error(error.message);
 		}
-		// Vehicle end its route
-		// if (arraysEqual(m.gps, config.routes.r1.end)) {
-		// 	update(m);
-		// }
-
-		// console.log(`[${sub.getProcessed()}]: ${m.subject}: ${m.data}`);
 	}
 
-	console.log('subscription closed!');
+	logger.info('subscription closed!');
 }
 
 subscribe();
