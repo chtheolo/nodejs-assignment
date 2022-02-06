@@ -1,4 +1,3 @@
-
 /*
 
 In this file you will find how we send raw data to other services via nats
@@ -11,6 +10,7 @@ const fs            = require ( "fs")
 const Writable      = require ("stream").Writable
 const { pipeline }  = require ("stream")
 const config		= require ("./config")
+const {logger}		= require ("./logs")
 
 // NATS Server is a simple, high performance open source messaging system
 // for cloud native applications, IoT messaging, and microservices architectures.
@@ -67,10 +67,10 @@ const readOutLoud = (vehicleName, nats) => {
 		}),
 		(error) => {
 			if (error) {
-				console.error(error.message)
+				logger.error(error.message);
 			}
 			else {
-				console.log("Pipeline succeeded");
+				logger.info("Pipeline succeeded");
 			}
 		}
 	)
@@ -85,13 +85,11 @@ const readOutLoud = (vehicleName, nats) => {
 const main = async () => {
     try {
         var nats = await connect(
-          // {json:true},
+			// {json:true}
           {servers: 'nats://nats:4222'}
         );
     } catch (error) {
-        console.error(
-            `error connecting to nats: ${error.message}`
-        );
+		logger.error(`error connecting to nats: ${error.message}`)
         return;
     }
 
@@ -101,13 +99,13 @@ const main = async () => {
 
     nats.closed()
     .then(error => {
-      console.log('connection has been closed')
+      logger.info('connection has been closed')
       if (error) {
-        console.error(error)
+        logger.error(error.message);
       }
     })
     .catch((error) => {
-      console.dir(error)
+      logger.error(error)
     })
 
 	// This next few lines simulate Henk's (our favorite driver) shift
@@ -117,7 +115,6 @@ const main = async () => {
 			console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
 		})
 	// To make your presentation interesting maybe you can make henk drive again in reverse
-
 }
 
 main()
