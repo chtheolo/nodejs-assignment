@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-const config = require('../../config');
+const config = require('../config');
 const {connect} = require('nats');
 const {logger} = require('../logs');
 const {post, update} = require('../routes/vehicle_data');

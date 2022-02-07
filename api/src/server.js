@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
 const router = require('./routes');
-const config = require('../config');
+const config = require('./config');
 const natsParser = require('./vehicle-data-parser');
 const {logger} = require('./logs');
 
@@ -26,7 +26,6 @@ async function main() {
 
 	const server = app.listen(config.service.port);
 	logger.info(`Server :: Running @ 'http://localhost:${config.service.port}.`);
-	console.log(`Server :: Running @ 'http://localhost:${config.service.port}.`);
 
 	// Import routes to be served
 	router(app);

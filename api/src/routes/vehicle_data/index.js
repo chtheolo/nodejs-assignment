@@ -1,24 +1,25 @@
 const VehicleData = require('./model');
-const config = require('../../../config');
+const config = require('../../config');
 
 function get(req, res) {
-	let query;
+	// let query;
 
-	if (res.query.vehicleId) {
-		query = VehicleData.find({vehicleId: {$eq: req.query.vehicleId}});
-	}
+	const query = VehicleData.find();
+	// if (res.query.vehicleId) {
+	// 	query = VehicleData.find({vehicleId: {$eq: req.query.vehicleId}});
+	// }
 
-	if (res.query.startRouteDate) {
-		query = VehicleData.find({startRouteDate: {$eq: req.query.startRouteDate}});
-	}
+	// if (res.query.startRouteDate) {
+	// 	query = VehicleData.find({startRouteDate: {$eq: req.query.startRouteDate}});
+	// }
 
-	if (req.query.startRouteDate && req.query.vehicleId) {
-		query = VehicleData.find({
-			$and: {
-				startRouteDate: {$eq: req.query.startRouteDate},
-			},
-		});
-	}
+	// if (req.query.startRouteDate && req.query.vehicleId) {
+	// 	query = VehicleData.find({
+	// 		$and: {
+	// 			startRouteDate: {$eq: req.query.startRouteDate},
+	// 		},
+	// 	});
+	// }
 
 	// I if (req.query.date && req.query.vehicleId) {
 	// 	query = VehicleData.find({

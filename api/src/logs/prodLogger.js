@@ -6,9 +6,9 @@ const devFormats = printf(({message, level, timestamp}) => {
 	return `${timestamp} [${level}] : ${message}`;
 });
 
-const developLogger = () => {
+const prodLogger = () => {
 	return createLogger({
-		level: 'info',
+		level: 'debug',
 		format: combine(
 			timestamp(),
 			devFormats,
@@ -16,9 +16,8 @@ const developLogger = () => {
 		transports: [
 			new transports.File({filename: 'error.log', level: 'error'}),
 			new transports.File({filename: 'output.log'}),
-			new transports.Console(),
 		],
 	});
 };
 
-module.exports = developLogger;
+module.exports = prodLogger;
