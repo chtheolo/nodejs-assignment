@@ -14,10 +14,6 @@ async function subscribe() {
 		return new Error(`error connecting to nats: ${error.message}`);
 	}
 
-	console.info(
-		`connected to ${nc.options.servers}`,
-	);
-
 	logger.info(
 		`connected to ${nc.options.servers}`,
 	);
@@ -35,12 +31,12 @@ async function subscribe() {
 		});
 
 	const sub = nc.subscribe(`vehicle.${config.subject.name}`);
-	console.log(`subscribed to ${config.subject.name} using subscription id ${sub.getID()}`);
 	logger.info(`subscribed to ${config.subject.name} using subscription id ${sub.getID()}`);
 
 	for await (const m of sub) {
 		try {
-			await ws.broadcastToClients(m.data);
+			const r = await ws.broadcastToClients(m.data);
+			logger.info(r);
 		} catch (error) {
 			logger.error(error.message);
 		}

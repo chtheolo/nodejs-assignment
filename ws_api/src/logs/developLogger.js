@@ -16,6 +16,7 @@ const developLogger = () => {
 		transports: [
 			new transports.File({filename: 'error.log', level: 'error'}),
 			new transports.File({filename: 'output.log'}),
+			new transports.Console(),
 		],
 	});
 };

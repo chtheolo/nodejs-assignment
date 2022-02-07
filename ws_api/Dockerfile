@@ -11,4 +11,6 @@ RUN npm install
 # Bundle the app source code
 COPY . .
 
-CMD [ "npm", "run", "start" ]
+ENV mode="start"
+
+CMD ["sh", "-c", "npm run ${mode}"]

@@ -4,7 +4,8 @@
   "description": "A websocket api forwarding new values coming to nats.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "dev": "NODE_ENV=development node src/index.js",
+    "start": "NODE_ENV=production node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "chtheolo",
