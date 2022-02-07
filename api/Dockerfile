@@ -13,4 +13,6 @@ COPY . .
 
 # EXPOSE 8080
 
-CMD [ "npm", "run", "start" ]
+ENV mode="start"
+
+CMD ["sh", "-c", "npm run ${mode}"]
