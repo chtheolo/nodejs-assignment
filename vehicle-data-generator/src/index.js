@@ -24,7 +24,7 @@ const { connect, JSONCodec } = require("nats")
 // This function will start reading out csv data from file and publish it on nats
 const readOutLoud = (vehicleName, nats) => {
 	// Read out meta/route.csv and turn it into readable stream
-	const fileStream = fs.createReadStream("./meta/route.csv")
+	const fileStream = fs.createReadStream(__dirname + "/meta/route.csv")
 	// =========================
 	// Question Point 1:
 	// What's the difference betweeen fs.createReadStream, fs.readFileSync, and fs.readFileAsync?
@@ -85,7 +85,6 @@ const readOutLoud = (vehicleName, nats) => {
 const main = async () => {
     try {
         var nats = await connect(
-			// {json:true}
           {servers: 'nats://nats:4222'}
         );
     } catch (error) {
@@ -93,7 +92,7 @@ const main = async () => {
         return;
     }
 
-    console.info(
+    logger.info(
         `connected to ${nats.options.servers}`
     );
 
