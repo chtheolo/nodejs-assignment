@@ -12,6 +12,8 @@ services:
     depends_on:
       - mongo
       - nats
+    environment:
+      - mode=${MODE}
   data_broadcast:
     container_name: data_bcast
     build:
