@@ -85,7 +85,7 @@ const readOutLoud = (vehicleName, nats) => {
 const main = async () => {
     try {
         var nats = await connect(
-          {servers: 'nats://nats:4222'}
+          {servers: `nats://nats:${config.nats.port}`}
         );
     } catch (error) {
 		logger.error(`error connecting to nats: ${error.message}`)
@@ -112,6 +112,7 @@ const main = async () => {
 	readOutLoud(config.subject.name, nats)
 		.once("finish", () => {
 			console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
+			return;
 		})
 	// To make your presentation interesting maybe you can make henk drive again in reverse
 }
