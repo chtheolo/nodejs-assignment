@@ -32,7 +32,7 @@ async function main() {
 
 	// Start nats subscriber.
 	try {
-		natsParser.subscribe();
+		natsParser.parser(config.nats.port);
 	} catch (error) {
 		logger.error(error.message);
 	}

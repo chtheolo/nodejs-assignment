@@ -13,6 +13,10 @@ const routes = {
 	},
 };
 
+const nats = {
+	port: 4222,
+};
+
 const service = {
 	port: process.env.PORT,
 };
@@ -21,4 +25,4 @@ const dbClient = {
 	database: `mongodb://mongo:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
 };
 
-module.exports = {service, dbClient, subject, routes};
+module.exports = {service, dbClient, subject, routes, nats};
