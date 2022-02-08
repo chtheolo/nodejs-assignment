@@ -32,29 +32,26 @@ async function parser(port) {
 	try {
 		const nats = await connection(port);
 		const sub = await subscribe(nats, config.subject.name);
-		let i = 0;
+
 		for await (const m of sub) {
 			try {
 				const d = await transformToObj(m.data);
 
-				i++;
-				if (i <= 2) {
-					// Vehicle start its route
-					if (await arraysEqual(d.gps, config.routes.r1.gpsStart) && d.speed === 0) {
-						config.routes.r1.startTime = d.time;
-						try {
-							const res = await post(d, config.subject.name);
-							logger.info(res);
-						} catch (error) {
-							logger.error(error.message);
-						}
-					} else {
-						try {
-							const res = await update(d);
-							logger.info(res);
-						} catch (error) {
-							logger.error(error.message);
-						}
+				// Vehicle start its route
+				if (await arraysEqual(d.gps, config.routes.r1.gpsStart) && d.speed === 0) {
+					config.routes.r1.startTime = d.time;
+					try {
+						const res = await post(d, config.subject.name);
+						logger.info(res);
+					} catch (error) {
+						logger.error(error.message);
+					}
+				} else {
+					try {
+						const res = await update(d);
+						logger.info(res);
+					} catch (error) {
+						logger.error(error.message);
 					}
 				}
 			} catch (error) {
