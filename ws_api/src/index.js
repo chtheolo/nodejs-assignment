@@ -1,50 +1,40 @@
+/* eslint-disable new-cap */
 const config = require('./config');
-const {connect} = require('nats');
-const ws = require('./ws');
 const {logger} = require('./logs');
+const {subscribe} = require('./Nats/subscription');
+const {connection} = require('./Nats/connect');
+const {JSONCodec} = require('nats');
+const WebSocket = require('ws');
 
-async function subscribe() {
-	let nc;
+const wss = new WebSocket.Server({port: config.websocket.port});
+
+wss.on('connection', ws => {
+	console.log(wss.clients);
+	ws.on('close', () => {
+		console.log('A client closed his connection!');
+	});
+}).on('close', ws => {
+	logger.info(`The client ${ws} close his connection`);
+});
+
+async function main() {
 	try {
-		nc = await connect(
-			{servers: 'nats://nats:4222'},
-		);
-	} catch (error) {
-		logger.error(error);
-		return new Error(`error connecting to nats: ${error.message}`);
-	}
+		const nats = await connection(config.nats.port);
+		const sub = await subscribe(nats, config.subject.name);
 
-	logger.info(
-		`connected to ${nc.options.servers}`,
-	);
-
-	nc.closed()
-		.then(error => {
-			logger.info('connection has been closed');
-			if (error) {
-				return new Error(error.message);
-			}
-		})
-		.catch(error => {
-			logger.error(error.message);
-			return new Error(error.message);
-		});
-
-	const sub = nc.subscribe(`vehicle.${config.subject.name}`);
-	logger.info(`subscribed to ${config.subject.name} using subscription id ${sub.getID()}`);
-
-	for await (const m of sub) {
-		try {
-			const r = await ws.broadcastToClients(m.data);
-			logger.info(r);
-		} catch (error) {
-			logger.error(error.message);
+		const jc = JSONCodec();
+		for await (const m of sub) {
+			wss.clients.forEach(client => {
+				if (client !== wss && client.readyState === WebSocket.OPEN) {
+					client.send(jc.decode(m.data));
+				}
+			});
 		}
-	}
 
-	logger.info('subscription closed!');
+		logger.info('subscription closed!');
+	} catch (error) {
+		logger.error(error.message);
+	}
 }
 
-subscribe();
-
-module.exports = {subscribe};
+main();
