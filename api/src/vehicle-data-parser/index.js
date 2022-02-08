@@ -2,7 +2,7 @@
 /* eslint-disable arrow-body-style */
 const config = require('../config');
 const {logger} = require('../logs');
-const {post, update} = require('../routes/vehicle_data');
+const {create, update} = require('../routes/vehicle_data/helpers');
 const {subscribe} = require('./Nats/subscription');
 const {connection} = require('./Nats/connect');
 
@@ -41,14 +41,16 @@ async function parser(port) {
 				if (await arraysEqual(d.gps, config.routes.r1.gpsStart) && d.speed === 0) {
 					config.routes.r1.startTime = d.time;
 					try {
-						const res = await post(d, config.subject.name);
+						const res = await create(d, config.subject.name);
 						logger.info(res);
 					} catch (error) {
 						logger.error(error.message);
 					}
 				} else {
+					// The rest of the data will call update
+					// in order to add data to our newly created Document
 					try {
-						const res = await update(d);
+						const res = await update(d, config.subject.name, config.routes.r1.startTime);
 						logger.info(res);
 					} catch (error) {
 						logger.error(error.message);
