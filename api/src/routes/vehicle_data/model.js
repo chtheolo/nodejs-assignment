@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 
+const d = new Date();
 const {Schema} = mongoose;
 const schemaOpts = {
-	timestamps: true,
+	timestamps: {
+		currentTime: () => d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear(),
+	},
 };
 
 const VehicleDataSchema = new Schema({
 	vehicleId: {type: String},
 	startRouteDate: {type: Date, default: new Date()},
-	// D date: {type: Date, default: new Date()},
 	measurements: [
 		{type: Object},
 	],
