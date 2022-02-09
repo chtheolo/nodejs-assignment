@@ -23,8 +23,14 @@ const { connect, JSONCodec } = require("nats")
 
 // This function will start reading out csv data from file and publish it on nats
 const readOutLoud = (vehicleName, nats) => {
+	let fileStream
 	// Read out meta/route.csv and turn it into readable stream
-	const fileStream = fs.createReadStream(__dirname + "/meta/route.csv")
+	if (process.env.NODE_ENV === 'test') {
+		fileStream = fs.createReadStream(__dirname + "/meta/test.csv")
+	} else {
+		fileStream = fs.createReadStream(__dirname + "/meta/route.csv")
+	}
+	
 	// =========================
 	// Question Point 1:
 	// What's the difference betweeen fs.createReadStream, fs.readFileSync, and fs.readFileAsync?
@@ -108,13 +114,28 @@ const main = async () => {
     })
 
 	// This next few lines simulate Henk's (our favorite driver) shift
-	console.log("Henk checks in on test-bus-1 starting his shift...")
-	readOutLoud(config.subject.name, nats)
-		.once("finish", () => {
-			console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
-			return;
-		})
+	if (process.env.NODE_ENV === 'test') {
+		console.log("--Test MODE --\nWaiting for clients to connecct");
+		setTimeout(() => {
+			console.log("Henk checks in on test-bus-1 starting his shift...")
+			readOutLoud(config.subject.name, nats)
+				.once("finish", () => {
+					console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
+					return;
+				})
+		}, 20000);
+	} else {
+		console.log("Henk checks in on test-bus-1 starting his shift...")
+		readOutLoud(config.subject.name, nats)
+			.once("finish", () => {
+				console.log("henk is on the last stop and he is taking a cigarrete while waiting for his next trip")
+				return;
+			})
+	}
+
+
 	// To make your presentation interesting maybe you can make henk drive again in reverse
+	
 }
 
 main()

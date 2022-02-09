@@ -10,6 +10,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# EXPOSE 3000
+ENV mode="start-broadcast"
 
-CMD [ "npm", "run", "start-broadcast" ]
+CMD ["sh", "-c", "npm run ${mode}"]
