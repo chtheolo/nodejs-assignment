@@ -10,8 +10,8 @@ const websocket = {
 	port: 8080,
 };
 
-const service = {
-	port: process.env.PORT,
+const test = {
+	expectedMessages: 300,
 };
 
-module.exports = {service, subject, nats, websocket};
+module.exports = {subject, nats, websocket, test};
