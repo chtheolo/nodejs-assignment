@@ -22,7 +22,9 @@ const service = {
 };
 
 const dbClient = {
-	database: `mongodb://mongo:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
+	database: `mongodb://${process.env.CONTAINER_DATABASE}:${process.env.MONGO_PORT}/${process.env.DATABASE}`,
+	devDatabase: `mongodb://${process.env.CONTAINER_DATABASE}:${process.env.MONGO_PORT}/${process.env.DEV_DATABASE}`,
+	testDatabase: `mongodb://${process.env.CONTAINER_DATABASE_TEST}:${process.env.MONGO_PORT}/${process.env.TEST_DATABASE}`,
 };
 
 module.exports = {service, dbClient, subject, routes, nats};

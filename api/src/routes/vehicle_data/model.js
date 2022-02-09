@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
 
-const d = new Date();
 const {Schema} = mongoose;
 const schemaOpts = {
-	timestamps: {
-		currentTime: () => d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear(),
-	},
+	timestamps: true,
 };
 
 const VehicleDataSchema = new Schema({
 	vehicleId: {type: String},
+	date: {type: Date},
 	startRouteDate: {type: Date, default: new Date()},
 	measurements: [
 		{type: Object},
@@ -24,4 +22,4 @@ const VehicleDataSchema = new Schema({
 	socEnd: {type: Number},
 }, schemaOpts);
 
-module.exports = mongoose.model('VehicleData', VehicleDataSchema);
+module.exports = mongoose.model('VehicleData', VehicleDataSchema, 'VehicleData');
