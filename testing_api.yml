@@ -2,42 +2,24 @@ version: "3.7"
 services:
   api:
     container_name: api_mongo
-    restart: always
     build: 
       context: ./api
     ports: 
       - "3000:3000"
     links: 
-      - mongo
+      - mongo_test
     depends_on:
-      - mongo
+      - mongo_test
       - nats
     environment:
       - mode=${MODE}
-  data_broadcast:
-    container_name: data_bcast
-    build:
-      context: ./vehicle-data-generator
-    depends_on:
-      - api
-      - nats
-  websocket_api:
-    container_name: ws_api
-    build:
-      context: ./ws_api
-    ports:
-      - "8080:8080"
-    depends_on:
-      - nats
-    environment:
-      - mode=${MODE}
-  mongo:
-    container_name: mongodb
-    restart: always
+  mongo_test:
+    container_name: mongodb_test
     image: mongo
     ports: 
       - "27017:27017"
     volumes:
+      - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./database/mongo_data:/var/lib/mongo/data
   nats:
     image: nats
