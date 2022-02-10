@@ -13,7 +13,6 @@
   5. [MongoDB](#mongo)
   6. [Tests](#tests)
 * [Packages](#pkg)
-* [Future Work](#future)
 
 
 <a name="how-to-install"></a>
