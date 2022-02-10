@@ -2,7 +2,7 @@ version: "3.7"
 services:
   api:
     container_name: api_mongo
-    restart: always
+    # restart: always
     build: 
       context: ./api
     ports: 
@@ -33,7 +33,7 @@ services:
       - mode=${MODE}
   mongo:
     container_name: mongodb
-    restart: always
+    # restart: always
     image: mongo
     ports: 
       - "27017:27017"
