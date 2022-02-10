@@ -349,7 +349,7 @@ the root of our project. This, folder keeps the docker volume folder and an init
 ### Tests
 
 Running tests is crucial for software development. Tests are never enough!!! For the purposes of this project, I have tested the 
-REST api and the Websocket api. I have implemented test for the enpoints serving our api by using mocha & chai framework, validating 
+REST api and the Websocket api. I have implemented test for the enpoints served by our api with the use of mocha & chai framework, validating 
 the responses, status codes and size of responses. These tests run in docker containers, in different db, without affecting our 
 production or development modes.
 
