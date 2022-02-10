@@ -35,17 +35,6 @@ describe('VechicleData', () => {
 		});
 	});
 
-	describe(`GET /vehicle_data?vehicleID=${vehicleID}`, () => {
-		it('it should GET all data for the vehicleID', done => {
-			chai.request(server)
-				.get(`/vehicle_data?vehicleID=${vehicleID}`)
-				.end((err, res) => {
-					res.should.have.status(404);
-					done();
-				});
-		});
-	});
-
 	describe(`GET /vehicle_data?vehicleId=${vehicleID}&date=${date}`, () => {
 		it('it should GET all data for the vehicleID for that date', done => {
 			chai.request(server)
